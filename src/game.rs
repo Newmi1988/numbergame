@@ -92,9 +92,13 @@ impl<'game> Numbergame<'game> {
                 "Found target : {:?}",
                 self.derived.get_key_value(&self.target).unwrap()
             )
+        } else {
+            Numbergame::generate_solutions()
         }
 
-        
+    }
+
+    fn generate_solutions(&self) -> String
         let hashmap_keys: Vec<u32> = self.derived.keys().cloned().collect();
 
         let new_canidates: Vec<u32> = [
@@ -130,7 +134,8 @@ impl<'game> Numbergame<'game> {
             // println!("Total Equation is : {}", equation);
             return equation
         } else {
-            return "Solution not found".to_string()
+            // return "Solution not found".to_string()
+            equation = Numbergame::generate_solutions()
         }
     }
 
