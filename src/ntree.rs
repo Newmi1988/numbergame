@@ -1,21 +1,20 @@
 use std::fmt;
 
-pub struct CalcNumber<'a>  {
+pub struct CalcNumber<'game>  {
     pub value : u32,
-    left_element : u32,
-    right_element : u32,
-    operation : &'a str,
+    pub left_element : u32,
+    pub right_element : u32,
+    pub operation : &'game str,
 }
 
-impl fmt::Debug for CalcNumber<'_> {
+impl <'game> fmt::Debug for CalcNumber<'game> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}{}{}={}", self.left_element,self.operation, self.right_element, self.value)
-    }
-    
-    }
+    }    
+}
 
 
-impl CalcNumber <'_> {
+impl <'game> CalcNumber <'game> {
     pub fn generate_number_with_operation(left_element : u32, right_element : u32, operation : &str) -> Result<CalcNumber, String> {
 
         match operation {
@@ -73,7 +72,7 @@ impl CalcNumber <'_> {
         }
     }
 
-    pub fn combine<'a>(&self, right_element: u32, operation: &'a str) -> Result<CalcNumber<'a>,String> {
+    pub fn combine(&self, right_element: u32, operation: &'game str) -> Result<CalcNumber,String> {
         return CalcNumber::generate_number_with_operation(self.value, right_element, operation);
     }
 }
