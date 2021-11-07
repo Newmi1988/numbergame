@@ -61,8 +61,8 @@ impl<'game> Numbergame<'game> {
     }
 
     pub fn solve(&'game mut self) -> String {
-        let mut found : bool = false;
-        let mut numbers: Vec<u32> = [
+        let mut found: bool = false;
+        let numbers: Vec<u32> = [
             &self.numbers.sml_number_selection[..],
             &self.numbers.big_number_selection[..],
         ]
@@ -96,19 +96,16 @@ impl<'game> Numbergame<'game> {
             )
         }
 
-        let mut equation : String = "".to_string();
+        let mut equation: String = "".to_string();
 
         while found != true {
-
             let hashmap_keys: Vec<u32> = self.derived.keys().cloned().collect();
-    
             let new_canidates: Vec<u32> = [
                 &self.numbers.sml_number_selection[..],
                 &self.numbers.big_number_selection[..],
                 &hashmap_keys[..],
             ]
             .concat();
-    
             for (a, b) in new_canidates.iter().tuple_combinations() {
                 for op in self.operators.iter() {
                     let tmp = match CalcNumber::generate_number_with_operation(*a, *b, op) {
@@ -125,7 +122,6 @@ impl<'game> Numbergame<'game> {
                     }
                 }
             }
-    
             if self.derived.contains_key(&self.target) {
                 println!(
                     "Found target : {:?}",
@@ -133,14 +129,12 @@ impl<'game> Numbergame<'game> {
                 );
                 found = true;
                 equation = Numbergame::get_equation(&self.numbers, &self.derived, &self.target);
-                // println!("Total Equation is : {}", equation);
             } else {
                 continue;
             }
         }
 
         return equation;
-
     }
 
     fn get_equation(

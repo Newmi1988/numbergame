@@ -1,78 +1,78 @@
 use std::fmt;
 
-pub struct CalcNumber<'game>  {
-    pub value : u32,
-    pub left_element : u32,
-    pub right_element : u32,
-    pub operation : &'game str,
+pub struct CalcNumber<'game> {
+    pub value: u32,
+    pub left_element: u32,
+    pub right_element: u32,
+    pub operation: &'game str,
 }
 
-impl <'game> fmt::Debug for CalcNumber<'game> {
+impl<'game> fmt::Debug for CalcNumber<'game> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}{}{}={}", self.left_element,self.operation, self.right_element, self.value)
-    }    
+        write!(
+            f,
+            "{}{}{}={}",
+            self.left_element, self.operation, self.right_element, self.value
+        )
+    }
 }
 
-
-impl <'game> CalcNumber <'game> {
-    pub fn generate_number_with_operation(left_element : u32, right_element : u32, operation : &str) -> Result<CalcNumber, String> {
-
+impl<'game> CalcNumber<'game> {
+    pub fn generate_number_with_operation(
+        left_element: u32,
+        right_element: u32,
+        operation: &str,
+    ) -> Result<CalcNumber, String> {
         match operation {
             "+" => Ok(CalcNumber {
-                value : left_element + right_element,
-                left_element : left_element,
-                right_element : right_element,
-                operation : operation
+                value: left_element + right_element,
+                left_element: left_element,
+                right_element: right_element,
+                operation: operation,
             }),
             "-" => {
                 if right_element > left_element {
                     Err(String::from("Negative numbers are not allowed"))
                 } else {
                     Ok(CalcNumber {
-                        value : left_element - right_element,
-                        left_element : left_element,
-                        right_element : right_element,
-                        operation : operation
+                        value: left_element - right_element,
+                        left_element: left_element,
+                        right_element: right_element,
+                        operation: operation,
                     })
                 }
-            },
+            }
             "*" => {
-
                 if (left_element == 0) || (right_element == 0) {
                     Err(String::from("Faktor 0 not allowed."))
                 } else {
-                    Ok(
-                        CalcNumber {
-                            value : left_element * right_element,
-                            left_element : left_element,
-                            right_element : right_element,
-                            operation : operation
-                        }
-                    )
+                    Ok(CalcNumber {
+                        value: left_element * right_element,
+                        left_element: left_element,
+                        right_element: right_element,
+                        operation: operation,
+                    })
                 }
-
-            },
+            }
             "/" => {
                 if right_element == 0 {
                     Err(String::from("Division by 0 not allowed"))
-                } else if (left_element % right_element) != 0  {
+                } else if (left_element % right_element) != 0 {
                     Err(String::from("Division has a remainder < 1."))
-                } else {   
-                    Ok(
-                        CalcNumber {
-                            value : left_element / right_element,
-                            left_element : left_element,
-                            right_element : right_element,
-                            operation : operation
-                        }
-                    )
+                } else {
+                    Ok(CalcNumber {
+                        value: left_element / right_element,
+                        left_element: left_element,
+                        right_element: right_element,
+                        operation: operation,
+                    })
                 }
             }
-            _ => Err(String::from("Not possible"))
+            _ => Err(String::from("Not possible")),
         }
     }
 
-    pub fn combine(&self, right_element: u32, operation: &'game str) -> Result<CalcNumber,String> {
+    pub fn combine(&self, right_element: u32, operation: &'game str) -> Result<CalcNumber, String> {
         return CalcNumber::generate_number_with_operation(self.value, right_element, operation);
     }
 }
