@@ -61,6 +61,7 @@ impl<'game> Numbergame<'game> {
     }
 
     pub fn solve(&'game mut self) -> String {
+        let mut found : bool = false;
         let mut numbers: Vec<u32> = [
             &self.numbers.sml_number_selection[..],
             &self.numbers.big_number_selection[..],
@@ -88,55 +89,58 @@ impl<'game> Numbergame<'game> {
         }
 
         if self.derived.contains_key(&self.target) {
+            found = true;
             println!(
                 "Found target : {:?}",
                 self.derived.get_key_value(&self.target).unwrap()
             )
-        } else {
-            Numbergame::generate_solutions()
         }
 
-    }
+        let mut equation : String = "".to_string();
 
-    fn generate_solutions(&self) -> String
-        let hashmap_keys: Vec<u32> = self.derived.keys().cloned().collect();
+        while found != true {
 
-        let new_canidates: Vec<u32> = [
-            &self.numbers.sml_number_selection[..],
-            &self.numbers.big_number_selection[..],
-            &hashmap_keys[..],
-        ]
-        .concat();
-
-        for (a, b) in new_canidates.iter().tuple_combinations() {
-            for op in self.operators.iter() {
-                let tmp = match CalcNumber::generate_number_with_operation(*a, *b, op) {
-                    Err(error) => {
-                        info!("Error: {}", error);
-                        continue;
+            let hashmap_keys: Vec<u32> = self.derived.keys().cloned().collect();
+    
+            let new_canidates: Vec<u32> = [
+                &self.numbers.sml_number_selection[..],
+                &self.numbers.big_number_selection[..],
+                &hashmap_keys[..],
+            ]
+            .concat();
+    
+            for (a, b) in new_canidates.iter().tuple_combinations() {
+                for op in self.operators.iter() {
+                    let tmp = match CalcNumber::generate_number_with_operation(*a, *b, op) {
+                        Err(error) => {
+                            info!("Error: {}", error);
+                            continue;
+                        }
+                        Ok(res) => res,
+                    };
+                    if self.derived.contains_key(&tmp.value) {
+                        println!("Value {} already in hashmap -> skipping", tmp.value);
+                    } else {
+                        self.derived.insert(tmp.value.clone(), tmp);
                     }
-                    Ok(res) => res,
-                };
-                if self.derived.contains_key(&tmp.value) {
-                    println!("Value {} already in hashmap -> skipping", tmp.value);
-                } else {
-                    self.derived.insert(tmp.value.clone(), tmp);
                 }
+            }
+    
+            if self.derived.contains_key(&self.target) {
+                println!(
+                    "Found target : {:?}",
+                    self.derived.get_key_value(&self.target).unwrap()
+                );
+                found = true;
+                equation = Numbergame::get_equation(&self.numbers, &self.derived, &self.target);
+                // println!("Total Equation is : {}", equation);
+            } else {
+                continue;
             }
         }
 
-        if self.derived.contains_key(&self.target) {
-            println!(
-                "Found target : {:?}",
-                self.derived.get_key_value(&self.target).unwrap()
-            );
-            let equation = Numbergame::get_equation(&self.numbers, &self.derived, &self.target);
-            // println!("Total Equation is : {}", equation);
-            return equation
-        } else {
-            // return "Solution not found".to_string()
-            equation = Numbergame::generate_solutions()
-        }
+        return equation;
+
     }
 
     fn get_equation(
