@@ -15,12 +15,12 @@ pub struct Numbers {
 }
 
 /// sample some default numbers
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `select_n_small` number of small numbers to pick
-/// 
-/// # Examples 
+///
+/// # Examples
 /// ```
 /// let random_default_numbers = get_default_numbers(2)
 /// ```
@@ -56,7 +56,7 @@ pub struct Numbergame<'game> {
 impl<'game> Numbergame<'game> {
     /// Start the game with a random selection of numbers
     /// # Args
-    /// 
+    ///
     /// * `target` the number to reach
     /// * `selection_big_numbers` number of big numbers to select (still needs to be implemented)
     /// * `selection_sml_numbers` number of small numbers to select
@@ -84,8 +84,8 @@ impl<'game> Numbergame<'game> {
     }
 
     /// start the game with user definde numbers
-    /// 
-    /// # Args 
+    ///
+    /// # Args
     /// * `target` the number to reach
     /// * `numbers` user defined struct with arrays of numbers
     pub fn new_numbergame(target: u32, numbers: Numbers) -> Numbergame<'game> {
@@ -105,7 +105,7 @@ impl<'game> Numbergame<'game> {
     }
 
     /// Solve the game
-    
+
     pub fn solve(&'game mut self) -> String {
         // combine slices of the vectors to a new vector
         let numbers: Vec<u32> = [
@@ -137,7 +137,7 @@ impl<'game> Numbergame<'game> {
         // }
 
         let mut equation: String = "".to_string();
-        
+
         // if the number is in the first batch of combinations return the solution...
         if self.derived.contains_key(&self.target) {
             println!(
@@ -145,7 +145,7 @@ impl<'game> Numbergame<'game> {
                 self.derived.get_key_value(&self.target).unwrap()
             );
             equation = Numbergame::get_equation(&self.numbers, &self.derived, &self.target);
-            return equation
+            return equation;
         }
 
         // use the new combinations to calculate more
@@ -168,20 +168,25 @@ impl<'game> Numbergame<'game> {
                         }
                         Ok(res) => res,
                     };
-                    if self.derived.contains_key(&tmp.value) {
-                        // println!("Value {} already in hashmap -> skipping", tmp.value);
+                    // if we found the value break the loop (save cicles)
+                    if tmp.value == self.target {
+                        self.derived.insert(tmp.value.clone(), tmp);
+                        break;
+                    } else if self.derived.contains_key(&tmp.value) {
+                        continue; // a solution with the same value as already in the hashmap is discarded
                     } else {
                         self.derived.insert(tmp.value.clone(), tmp);
                     }
                 }
             }
-            // break if the target was found
+            // break the while loop of the target was found
             if self.derived.contains_key(&self.target) {
                 println!(
                     "Found target : {:?}",
                     self.derived.get_key_value(&self.target).unwrap()
                 );
                 found = true;
+                // format the equation
                 equation = Numbergame::get_equation(&self.numbers, &self.derived, &self.target);
             } else {
                 continue;
@@ -191,6 +196,12 @@ impl<'game> Numbergame<'game> {
         return equation;
     }
 
+    /// Using the left and right element of an calculated number format the equation with recursion
+    ///
+    /// # Args
+    /// * `orig_selection` The numbers the game started with
+    /// * `derived_values` new combinations calculated by the algorithm
+    /// * `solution` calculated number equal to the target
     fn get_equation(
         orig_selection: &Numbers,
         derived_values: &HashMap<u32, CalcNumber>,
@@ -198,6 +209,7 @@ impl<'game> Numbergame<'game> {
     ) -> String {
         let mut eq: String = "".to_string();
         let res: &CalcNumber = derived_values.get_key_value(solution).unwrap().1;
+        // check if the left element was one of the original ones
         if orig_selection
             .big_number_selection
             .contains(&res.left_element)
@@ -207,11 +219,13 @@ impl<'game> Numbergame<'game> {
         {
             write!(eq, "({}{}", res.left_element, res.operation).unwrap();
         } else {
+            // do a recursion step to get the elementes it was calculated from
             let returned_equation =
                 Numbergame::get_equation(orig_selection, derived_values, &res.left_element);
             write!(eq, "({}{}", returned_equation, res.operation).unwrap();
         }
 
+        // check if the right element was in the original numbers
         if orig_selection
             .sml_number_selection
             .contains(&res.right_element)
@@ -221,6 +235,7 @@ impl<'game> Numbergame<'game> {
         {
             write!(eq, "{})", res.right_element).unwrap();
         } else {
+            // if it was calculated do a recursion to search the original numbers
             let returned_equation =
                 Numbergame::get_equation(orig_selection, derived_values, &res.right_element);
             write!(eq, "{})", returned_equation).unwrap();
