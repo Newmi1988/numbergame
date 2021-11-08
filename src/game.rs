@@ -1,16 +1,29 @@
 use crate::ntree::CalcNumber;
-use rand::Rng;
 use itertools::Itertools;
 use log::info;
+use rand::Rng;
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fmt::Write;
 
+/// Store the numbers of the game in this struct
 pub struct Numbers {
+    /// big numbers are given for the game see the get_default_numbers function
     pub big_number_selection: Vec<u32>,
+    /// small numbers are between 1 and 9
     pub sml_number_selection: Vec<u32>,
 }
 
+/// sample some default numbers
+/// 
+/// # Arguments
+/// 
+/// * `select_n_small` number of small numbers to pick
+/// 
+/// # Examples 
+/// ```
+/// let random_default_numbers = get_default_numbers(2)
+/// ```
 pub fn get_default_numbers(select_n_small: u32) -> Numbers {
     let mut sml_random_number_vec: Vec<u32> =
         Vec::with_capacity(select_n_small.try_into().unwrap());
@@ -29,6 +42,7 @@ pub fn get_default_numbers(select_n_small: u32) -> Numbers {
     }
 }
 
+/// the goal of the game is to find an equation using the start numbers and numbers calculated from them
 pub struct Numbergame<'game> {
     pub target: u32,
     pub selection_big_numbers: u32,
@@ -38,7 +52,14 @@ pub struct Numbergame<'game> {
     pub operators: Vec<String>,
 }
 
+/// init and solve the game
 impl<'game> Numbergame<'game> {
+    /// Start the game with a random selection of numbers
+    /// # Args
+    /// 
+    /// * `target` the number to reach
+    /// * `selection_big_numbers` number of big numbers to select (still needs to be implemented)
+    /// * `selection_sml_numbers` number of small numbers to select
     pub fn new_random_numbergame(
         target: u32,
         selection_big_numbers: u32,
@@ -48,7 +69,31 @@ impl<'game> Numbergame<'game> {
             target: target,
             selection_big_numbers: selection_big_numbers,
             selection_sml_numbers: selection_sml_numbers,
+            /// get the sampled numbers as a Numbers struct
             numbers: get_default_numbers(selection_sml_numbers),
+            /// hashmap for looking up calculated numbers
+            derived: HashMap::new(),
+            /// allowed operations
+            operators: vec![
+                "+".to_string(),
+                "-".to_string(),
+                "*".to_string(),
+                "/".to_string(),
+            ],
+        }
+    }
+
+    /// start the game with user definde numbers
+    /// 
+    /// # Args 
+    /// * `target` the number to reach
+    /// * `numbers` user defined struct with arrays of numbers
+    pub fn new_numbergame(target: u32, numbers: Numbers) -> Numbergame<'game> {
+        Numbergame {
+            target: target,
+            selection_big_numbers: numbers.big_number_selection.len() as u32,
+            selection_sml_numbers: numbers.sml_number_selection.len() as u32,
+            numbers: numbers,
             derived: HashMap::new(),
             operators: vec![
                 "+".to_string(),
@@ -59,29 +104,17 @@ impl<'game> Numbergame<'game> {
         }
     }
 
-    pub fn new_numbergame(target : u32, numbers : Numbers) -> Numbergame<'game> {
-        Numbergame {
-            target : target,
-            selection_big_numbers : numbers.big_number_selection.len() as u32,
-            selection_sml_numbers : numbers.sml_number_selection.len() as u32,
-            numbers : numbers,
-            derived: HashMap::new(),
-            operators: vec![
-                "+".to_string(),
-                "-".to_string(),
-                "*".to_string(),
-                "/".to_string(),
-            ], 
-        }
-    }
-
+    /// Solve the game
+    
     pub fn solve(&'game mut self) -> String {
-        let mut found: bool = false;
+        // combine slices of the vectors to a new vector
         let numbers: Vec<u32> = [
             &self.numbers.sml_number_selection[..],
             &self.numbers.big_number_selection[..],
         ]
         .concat();
+
+        // get the cartesian product (every combination of all items)
         for (a, b) in numbers.iter().tuple_combinations() {
             for op in self.operators.iter() {
                 let tmp = match CalcNumber::generate_number_with_operation(*a, *b, op) {
@@ -103,17 +136,22 @@ impl<'game> Numbergame<'game> {
         //     println!("{} : {:?}", v, s)
         // }
 
+        let mut equation: String = "".to_string();
+        
+        // if the number is in the first batch of combinations return the solution...
         if self.derived.contains_key(&self.target) {
-            found = true;
             println!(
                 "Found target : {:?}",
                 self.derived.get_key_value(&self.target).unwrap()
-            )
+            );
+            equation = Numbergame::get_equation(&self.numbers, &self.derived, &self.target);
+            return equation
         }
 
-        let mut equation: String = "".to_string();
-
+        // use the new combinations to calculate more
+        let mut found: bool = false;
         while found != true {
+            // add the hashmap keys to the vector
             let hashmap_keys: Vec<u32> = self.derived.keys().cloned().collect();
             let new_canidates: Vec<u32> = [
                 &self.numbers.sml_number_selection[..],
@@ -137,6 +175,7 @@ impl<'game> Numbergame<'game> {
                     }
                 }
             }
+            // break if the target was found
             if self.derived.contains_key(&self.target) {
                 println!(
                     "Found target : {:?}",

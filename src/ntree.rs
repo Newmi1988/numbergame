@@ -46,8 +46,7 @@ impl<'game> CalcNumber<'game> {
                 let new_value = left_element.checked_mul(right_element);
                 if new_value == None {
                     Err(String::from("Overflow"))
-                }
-                else if (left_element == 0) || (right_element == 0) {
+                } else if (left_element == 0) || (right_element == 0) {
                     Err(String::from("Faktor 0 not allowed."))
                 } else {
                     Ok(CalcNumber {
