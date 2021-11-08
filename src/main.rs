@@ -15,9 +15,9 @@ fn main() {
     let solution: String = game.solve();
     let elapsed_time = now.elapsed();
     println!(
-        "Solution equation : {}, Took {} seconds",
+        "Solution equation : {}, Took {} ms",
         solution,
-        elapsed_time.as_secs()
+        elapsed_time.as_millis()
     );
 
     // a game with given numbers
@@ -36,8 +36,8 @@ fn main() {
     let solution_game_two: String = game_two.solve();
     let elapsed_time2 = timer_game_two.elapsed();
     println!(
-        "Solution equation : {}, Took {} seconds",
+        "Solution equation : {}, Took {} ms",
         solution_game_two,
-        elapsed_time2.as_secs()
+        elapsed_time2.as_millis()
     );
 }
