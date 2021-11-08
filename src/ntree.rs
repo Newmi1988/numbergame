@@ -43,11 +43,15 @@ impl<'game> CalcNumber<'game> {
                 }
             }
             "*" => {
-                if (left_element == 0) || (right_element == 0) {
+                let new_value = left_element.checked_mul(right_element);
+                if new_value == None {
+                    Err(String::from("Overflow"))
+                }
+                else if (left_element == 0) || (right_element == 0) {
                     Err(String::from("Faktor 0 not allowed."))
                 } else {
                     Ok(CalcNumber {
-                        value: left_element * right_element,
+                        value: new_value.unwrap(),
                         left_element: left_element,
                         right_element: right_element,
                         operation: operation,
@@ -70,9 +74,5 @@ impl<'game> CalcNumber<'game> {
             }
             _ => Err(String::from("Not possible")),
         }
-    }
-
-    pub fn combine(&self, right_element: u32, operation: &'game str) -> Result<CalcNumber, String> {
-        return CalcNumber::generate_number_with_operation(self.value, right_element, operation);
     }
 }

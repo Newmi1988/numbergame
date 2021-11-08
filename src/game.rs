@@ -1,8 +1,7 @@
 use crate::ntree::CalcNumber;
 use rand::Rng;
-// use std::collections::VecDeque;
 use itertools::Itertools;
-use log::{info, warn};
+use log::info;
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fmt::Write;
@@ -60,6 +59,22 @@ impl<'game> Numbergame<'game> {
         }
     }
 
+    pub fn new_numbergame(target : u32, numbers : Numbers) -> Numbergame<'game> {
+        Numbergame {
+            target : target,
+            selection_big_numbers : numbers.big_number_selection.len() as u32,
+            selection_sml_numbers : numbers.sml_number_selection.len() as u32,
+            numbers : numbers,
+            derived: HashMap::new(),
+            operators: vec![
+                "+".to_string(),
+                "-".to_string(),
+                "*".to_string(),
+                "/".to_string(),
+            ], 
+        }
+    }
+
     pub fn solve(&'game mut self) -> String {
         let mut found: bool = false;
         let numbers: Vec<u32> = [
@@ -83,10 +98,10 @@ impl<'game> Numbergame<'game> {
 
         // an initial hit is should be quite rare
         // generate more iteratively
-        // look into the calculated values
-        for (v, s) in &self.derived {
-            println!("{} : {:?}", v, s)
-        }
+        // uncomment the following lines to look into the calculated values
+        // for (v, s) in &self.derived {
+        //     println!("{} : {:?}", v, s)
+        // }
 
         if self.derived.contains_key(&self.target) {
             found = true;
@@ -116,7 +131,7 @@ impl<'game> Numbergame<'game> {
                         Ok(res) => res,
                     };
                     if self.derived.contains_key(&tmp.value) {
-                        println!("Value {} already in hashmap -> skipping", tmp.value);
+                        // println!("Value {} already in hashmap -> skipping", tmp.value);
                     } else {
                         self.derived.insert(tmp.value.clone(), tmp);
                     }
