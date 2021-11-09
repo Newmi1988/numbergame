@@ -6,7 +6,7 @@ There are solutions out there that use precalculated tables and a simple lookup.
 
 The equation is found using a simple hashmap that maps a value to a struct containing the elements of every operation. 
 
-# Is it a tree? 🌴 Yeah no really...
+# Is it a tree? 🌴 Yeah not really...
 Every node is the result of one of the following operations: + , - , * , / .
 ```
    a         b         c 

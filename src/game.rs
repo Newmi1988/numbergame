@@ -1,6 +1,7 @@
 use crate::ntree::CalcNumber;
 use itertools::Itertools;
 use log::info;
+use rand::seq::SliceRandom;
 use rand::Rng;
 use std::collections::HashMap;
 use std::convert::TryInto;
@@ -18,13 +19,13 @@ pub struct Numbers {
 ///
 /// # Arguments
 ///
-/// * `select_n_small` number of small numbers to pick
-///
+/// * `select_n_small` amount of small numbers to pick
+/// * `select_n_big` amount of big numbers to pick
 /// # Examples
 /// ```
 /// let random_default_numbers = get_default_numbers(2)
 /// ```
-pub fn get_default_numbers(select_n_small: u32) -> Numbers {
+pub fn get_default_numbers(select_n_small: u32, select_n_big: u32) -> Numbers {
     let mut sml_random_number_vec: Vec<u32> =
         Vec::with_capacity(select_n_small.try_into().unwrap());
     let mut rng = rand::thread_rng();
@@ -36,8 +37,15 @@ pub fn get_default_numbers(select_n_small: u32) -> Numbers {
         sml_random_number_vec.push(number)
     }
 
+    let big_numbers = vec![100, 75, 50, 25];
+    let mut rng = &mut rand::thread_rng();
+    let v: Vec<u32> = big_numbers
+        .choose_multiple(&mut rng, select_n_big.try_into().unwrap())
+        .cloned()
+        .collect();
+
     Numbers {
-        big_number_selection: vec![100, 75, 50, 25],
+        big_number_selection: v,
         sml_number_selection: sml_random_number_vec,
     }
 }
@@ -58,19 +66,32 @@ impl<'game> Numbergame<'game> {
     /// # Args
     ///
     /// * `target` the number to reach
-    /// * `selection_big_numbers` number of big numbers to select (still needs to be implemented)
+    /// * `selection_big_numbers` number of big numbers to select
     /// * `selection_sml_numbers` number of small numbers to select
     pub fn new_random_numbergame(
         target: u32,
-        selection_big_numbers: u32,
-        selection_sml_numbers: u32,
+        mut selection_big_numbers: u32,
+        mut selection_sml_numbers: u32,
     ) -> Numbergame<'game> {
+        if selection_big_numbers > 4 {
+            println!(
+                "Can't chose {} big numbers, max is 4 (now used).",
+                selection_big_numbers
+            );
+            selection_big_numbers = 4
+        }
+
+        if selection_sml_numbers > 9 {
+            println!("Cant choose more than 9 unique numbers out of range 0 to 9");
+            selection_sml_numbers = 9
+        }
+
         Numbergame {
             target: target,
             selection_big_numbers: selection_big_numbers,
             selection_sml_numbers: selection_sml_numbers,
             /// get the sampled numbers as a Numbers struct
-            numbers: get_default_numbers(selection_sml_numbers),
+            numbers: get_default_numbers(selection_sml_numbers, selection_big_numbers),
             /// hashmap for looking up calculated numbers
             derived: HashMap::new(),
             /// allowed operations
