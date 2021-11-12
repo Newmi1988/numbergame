@@ -22,9 +22,9 @@ Every value is the calculated using two numbers and one of the following operati
    a         b         c 
 a°b a°c   b°a b°c   c°a c°b
 ```
-However not all operations are commutative, depending on the operations. The tree increased in width from top to button.
+However not all operations are commutative, depending on the operations. The amount of numbers increases in width from top to button.
 
-Given ```n``` numbers that can be combined you get ```n!*4``` combinations (4 being the number of operations). In the next step you get ```((n+n!*4)!)*4``` possible combinations. There are many duplicates, as you can exspect. 
+Given ```n``` numbers that can be combined you get ```n!*4``` combinations (4 being the number of operations). In the next step you get ```((n+n!*4)!)*4``` possible combinations. There are many duplicates, as you may exspect. 
 
 Using a hashmap it is easy to keep track of the calculated values and its ancestors. If the target value is found simply follow the references to get the combination of the initial values.
 
