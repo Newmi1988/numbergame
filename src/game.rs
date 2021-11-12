@@ -1,4 +1,4 @@
-use crate::ntree::CalcNumber;
+use crate::ntree::CalculatedNumber;
 use itertools::Itertools;
 use log::info;
 use rand::seq::SliceRandom;
@@ -56,7 +56,7 @@ pub struct Numbergame<'game> {
     pub selection_big_numbers: u32,
     pub selection_sml_numbers: u32,
     pub numbers: Numbers,
-    pub derived: HashMap<u32, CalcNumber<'game>>,
+    pub derived: HashMap<u32, CalculatedNumber<'game>>,
     pub operators: Vec<String>,
 }
 
@@ -138,7 +138,7 @@ impl<'game> Numbergame<'game> {
         // get the cartesian product (every combination of all items)
         for (a, b) in numbers.iter().tuple_combinations() {
             for op in self.operators.iter() {
-                let tmp = match CalcNumber::generate_number_with_operation(*a, *b, op) {
+                let tmp = match CalculatedNumber::generate_number_with_operation(*a, *b, op) {
                     Err(error) => {
                         info!("Error: {}", error);
                         continue;
@@ -182,7 +182,7 @@ impl<'game> Numbergame<'game> {
             .concat();
             for (a, b) in new_canidates.iter().tuple_combinations() {
                 for op in self.operators.iter() {
-                    let tmp = match CalcNumber::generate_number_with_operation(*a, *b, op) {
+                    let tmp = match CalculatedNumber::generate_number_with_operation(*a, *b, op) {
                         Err(error) => {
                             info!("Error: {}", error);
                             continue;
@@ -225,11 +225,11 @@ impl<'game> Numbergame<'game> {
     /// * `solution` calculated number equal to the target
     fn get_equation(
         orig_selection: &Numbers,
-        derived_values: &HashMap<u32, CalcNumber>,
+        derived_values: &HashMap<u32, CalculatedNumber>,
         solution: &u32,
     ) -> String {
         let mut eq: String = "".to_string();
-        let res: &CalcNumber = derived_values.get_key_value(solution).unwrap().1;
+        let res: &CalculatedNumber = derived_values.get_key_value(solution).unwrap().1;
         // check if the left element was one of the original ones
         if orig_selection
             .big_number_selection

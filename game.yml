@@ -1,0 +1,12 @@
+random: false
+numbers_big:
+  - 100
+  - 75
+  - 50
+  - 25
+numbers_small:
+  - 2
+  - 5
+  - 7
+  - 3
+target: 853
