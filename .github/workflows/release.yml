@@ -1,8 +1,9 @@
-# .github/workflows/release.yml
+name: Rust Release binary
 
 on:
   release:
     types: [created]
+
 
 jobs:
   release:
