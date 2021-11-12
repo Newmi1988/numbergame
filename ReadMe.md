@@ -1,3 +1,4 @@
+[![Rust](https://github.com/Newmi1988/numbergame/actions/workflows/rust.yml/badge.svg)](https://github.com/Newmi1988/numbergame/actions/workflows/rust.yml)
 # Solver for the number round of the show countdown ⏱
 
 A friend approached me with this fun little puzzle. We talked a bit about different strategies that can be applied to solve this game in under 30 seconds.
@@ -50,3 +51,4 @@ Using a hashmap it is easy to keep track of the calculated values and its ancest
 
 ### 🛠 TODOS
 ❌ add cli with help
+❌ add unit tests 
