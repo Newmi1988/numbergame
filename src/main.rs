@@ -5,51 +5,83 @@ mod config_reader;
 mod game;
 mod ntree;
 
+pub const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+use clap::{Parser};
+
+/// A solver for the number round of the show Countdown. User defined
+/// numbers can be set from a config file in yaml format.
+#[derive(Parser)]
+#[clap(version = VERSION, author = "Tobias Newmiwaka")]
+struct Opts {
+    /// Sets a custom config file.
+    #[clap(short, long, default_value = "game.yml", value_name = "FILE")]
+    config: String,
+    /// Start a game with random numbers
+    #[clap(short, long)]
+    random: bool,
+    /// set the target
+    #[clap(short, long, value_name = "n", default_value = "420")]
+    target: u32,
+}
+
 fn main() {
-    let config_path = Path::new("game.yml");
-    let config = config_reader::read_config(config_path).unwrap();
-    println!("Config: {:?}", config);
+    let opts: Opts = Opts::parse();
 
-    if config.random {
-        println!("Starting random number game");
-        // start a random game (random picks for big and small numbers)
-        let mut game = game::Numbergame::new_random_numbergame(config.target, 2, 4);
+    match opts.random {
+        true => {
+            println!("Starting random number game");
+            // start a random game (random picks for big and small numbers)
+            let mut game = game::Numbergame::new_random_numbergame(opts.target, 2, 4);
 
-        println!("Big numbers: {:?}", game.numbers.big_number_selection);
-        println!("Small numbers: {:?}", game.numbers.sml_number_selection);
-        println!("Target : {:?}", game.target);
+            println!("Big numbers: {:?}", game.numbers.big_number_selection);
+            println!("Small numbers: {:?}", game.numbers.sml_number_selection);
+            println!("Target : {:?}", game.target);
 
-        let now = Instant::now();
-        let solution: String = game.solve();
-        let elapsed_time = now.elapsed();
-        println!(
-            "Solution equation : {}={} (took {} ms)",
-            solution,
-            config.target,
-            elapsed_time.as_millis()
-        );
-    } else {
-        // a game with given numbers
-        println!("Starting game with user defined numbers");
-        let numbers = game::Numbers {
-            big_number_selection: config.numbers_big,
-            sml_number_selection: config.numbers_small,
-        };
+            let now = Instant::now();
+            let solution: String = game.solve();
+            let elapsed_time = now.elapsed();
+            println!(
+                "Solution equation : {}={} (took {} ms)",
+                solution,
+                opts.target,
+                elapsed_time.as_millis()
+            );
+        }
+        false => {
+            let config_input : String;
+            if opts.config != "game.yml" {
+                // if user supplied config use it
+                println!("Using config file : {}", opts.config);
+                config_input = opts.config;
+            } else {
+                // use default if no config file is supplied
+                config_input = String::from("game.yml");
+            }
+            let config = config_reader::read_config(Path::new(&config_input)).unwrap();
+            println!("Config: {:?}", config);
 
-        // create the game object
-        let mut game_two = game::Numbergame::new_numbergame(config.target, numbers);
-        println!("Big numbers: {:?}", game_two.numbers.big_number_selection);
-        println!("Small numbers: {:?}", game_two.numbers.sml_number_selection);
-        println!("Target : {:?}", game_two.target);
+            // a game with given numbers
+            println!("Starting game with user defined numbers");
+            let numbers = game::Numbers {
+                big_number_selection: config.numbers_big,
+                sml_number_selection: config.numbers_small,
+            };
 
-        let timer_game_two = Instant::now();
-        let solution_game_two: String = game_two.solve();
-        let elapsed_time2 = timer_game_two.elapsed();
-        println!(
-            "Solution equation : {}={} (took {} ms)",
-            solution_game_two,
-            config.target,
-            elapsed_time2.as_millis()
-        );
+            // create the game object
+            let mut game_two = game::Numbergame::new_numbergame(config.target, numbers);
+            println!("Big numbers: {:?}", game_two.numbers.big_number_selection);
+            println!("Small numbers: {:?}", game_two.numbers.sml_number_selection);
+            println!("Target : {:?}", game_two.target);
+
+            let timer_game_from_config = Instant::now();
+            let solution_game_from_config: String = game_two.solve();
+            let elapsed_time_from_config = timer_game_from_config.elapsed();
+            println!(
+                "Solution equation : {}={} (took {} ms)",
+                solution_game_from_config,
+                config.target,
+                elapsed_time_from_config.as_millis()
+            );
+        }
     }
 }

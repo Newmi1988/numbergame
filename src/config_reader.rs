@@ -6,7 +6,6 @@ use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GameConfig {
-    pub random: bool,
     pub numbers_big: Vec<u32>,
     pub numbers_small: Vec<u32>,
     pub target: u32,
