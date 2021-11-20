@@ -6,12 +6,12 @@ mod game;
 mod ntree;
 
 pub const VERSION: &'static str = env!("CARGO_PKG_VERSION");
-use clap::{Parser};
+use clap::Parser;
 
 /// A solver for the number round of the show Countdown. User defined
 /// numbers can be set from a config file in yaml format.
 #[derive(Parser)]
-#[clap(version = VERSION, author = "Tobias Newmiwaka")]
+#[clap(version = VERSION, author = "Newmi1988")]
 struct Opts {
     /// Sets a custom config file.
     #[clap(short, long, default_value = "game.yml", value_name = "FILE")]
@@ -48,7 +48,7 @@ fn main() {
             );
         }
         false => {
-            let config_input : String;
+            let config_input: String;
             if opts.config != "game.yml" {
                 // if user supplied config use it
                 println!("Using config file : {}", opts.config);

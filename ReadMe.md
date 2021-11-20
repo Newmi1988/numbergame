@@ -31,14 +31,9 @@ Using a hashmap it is easy to keep track of the calculated values and its ancest
 
 ## 🏃‍♀️ How to run it:
 1. Clone the repo
-2. The config for the game is defined in _game.yml_ file. The target can be set with the key ```target```. You can run the solver in two configurations:
-
-    1. If you want to use randomly chosen number set 
-        ```
-        random : true
-        ```
-        this will ignore the small and big numbers set in the others keys
-    2. Use predefined numbers. The key ```numbers_big``` lets you set the big numbers. The key ```numbers_small``` lets you set the small numbers the algorithm uses.
+2. The config for the game is defined in ```game.yml``` file. The target can be set with the key ```target```. There are two keys to configre the game:
+    1. The key ```numbers_big``` lets you set the big numbers. 
+    2. The key ```numbers_small``` lets you set the small numbers the algorithm uses.
 4. Run the game-solver with 
     ```
     cargo run
@@ -49,6 +44,42 @@ Using a hashmap it is easy to keep track of the calculated values and its ancest
     ```
     to even more speed 🚀
 
+## 💲 CLI
+The new version has a cli to configure the program. Just compile it and run 
+```bash
+./target/release/numbergame -h
+```
+You will be greated by this:
+```
+numbergame 0.2.0
+
+Tobias Newmiwaka
+
+A solver for the number round of the show Countdown. User defined numbers can be set from a config
+file in yaml format
+
+USAGE:
+    numbergame [OPTIONS]
+
+OPTIONS:
+    -c, --config <FILE>    Sets a custom config file [default: game.yml]
+    -h, --help             Print help information
+    -r, --random           Start a game with random numbers
+    -t, --target <n>       set the target [default: 420]
+    -V, --version          Print version information
+```
+
+### Usage
+You can specify a config with the ```-c``` Argument like
+```
+./target/release/numbergame -c game.yml
+```
+For a game with random numbers the target number can be specified with the ```-t```
+```
+./target/release/numbergame -r -t 212
+```
+
 ### 🛠 TODOS
-❌ add cli with help
+✅ add cli with help
+
 ❌ add unit tests 
