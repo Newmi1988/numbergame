@@ -87,9 +87,9 @@ impl<'game> Numbergame<'game> {
         }
 
         Numbergame {
-            target: target,
-            selection_big_numbers: selection_big_numbers,
-            selection_sml_numbers: selection_sml_numbers,
+            target,
+            selection_big_numbers,
+            selection_sml_numbers,
             /// get the sampled numbers as a Numbers struct
             numbers: get_default_numbers(selection_sml_numbers, selection_big_numbers),
             /// hashmap for looking up calculated numbers
@@ -111,10 +111,10 @@ impl<'game> Numbergame<'game> {
     /// * `numbers` user defined struct with arrays of numbers
     pub fn new_numbergame(target: u32, numbers: Numbers) -> Numbergame<'game> {
         Numbergame {
-            target: target,
+            target,
             selection_big_numbers: numbers.big_number_selection.len() as u32,
             selection_sml_numbers: numbers.sml_number_selection.len() as u32,
-            numbers: numbers,
+            numbers,
             derived: HashMap::new(),
             operators: vec![
                 "+".to_string(),
@@ -146,7 +146,7 @@ impl<'game> Numbergame<'game> {
                     Ok(res) => res,
                 };
 
-                self.derived.insert(tmp.value.clone(), tmp);
+                self.derived.insert(tmp.value, tmp);
             }
         }
 
@@ -171,7 +171,7 @@ impl<'game> Numbergame<'game> {
 
         // use the new combinations to calculate more
         let mut found: bool = false;
-        while found != true {
+        while !found {
             // add the hashmap keys to the vector
             let hashmap_keys: Vec<u32> = self.derived.keys().cloned().collect();
             let new_canidates: Vec<u32> = [
@@ -191,12 +191,12 @@ impl<'game> Numbergame<'game> {
                     };
                     // if we found the value break the loop (save cicles)
                     if tmp.value == self.target {
-                        self.derived.insert(tmp.value.clone(), tmp);
+                        self.derived.insert(tmp.value, tmp);
                         break;
-                    } else if self.derived.contains_key(&tmp.value) {
-                        continue; // a solution with the same value as already in the hashmap is discarded
+                    } else if let std::collections::hash_map::Entry::Vacant(e) = self.derived.entry(tmp.value) {
+                        e.insert(tmp);
                     } else {
-                        self.derived.insert(tmp.value.clone(), tmp);
+                        continue; // a solution with the same value as already in the hashmap is discarded
                     }
                 }
             }
@@ -214,7 +214,7 @@ impl<'game> Numbergame<'game> {
             }
         }
 
-        return equation;
+        equation
     }
 
     /// Using the left and right element of an calculated number format the equation with recursion
@@ -261,6 +261,6 @@ impl<'game> Numbergame<'game> {
                 Numbergame::get_equation(orig_selection, derived_values, &res.right_element);
             write!(eq, "{})", returned_equation).unwrap();
         }
-        return eq;
+        eq
     }
 }

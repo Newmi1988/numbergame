@@ -5,7 +5,7 @@ mod config_reader;
 mod game;
 mod ntree;
 
-pub const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 use clap::Parser;
 
 /// A solver for the number round of the show Countdown. User defined

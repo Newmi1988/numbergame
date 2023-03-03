@@ -30,14 +30,14 @@ impl<'game> CalculatedNumber<'game> {
             "+" => {
                 // as we use 32 bit unsigned integers check for overflow
                 let new_value = left_element.checked_add(right_element);
-                if new_value == None {
+                if new_value.is_none() {
                     Err(String::from("Overflow on addition"))
                 } else {
                     Ok(CalculatedNumber {
                         value: left_element + right_element,
-                        left_element: left_element,
-                        right_element: right_element,
-                        operation: operation,
+                        left_element,
+                        right_element,
+                        operation,
                     })
                 }
             }
@@ -48,25 +48,25 @@ impl<'game> CalculatedNumber<'game> {
                 } else {
                     Ok(CalculatedNumber {
                         value: left_element - right_element,
-                        left_element: left_element,
-                        right_element: right_element,
-                        operation: operation,
+                        left_element,
+                        right_element,
+                        operation,
                     })
                 }
             }
             "*" => {
                 // multiplication is prone to overflow
                 let new_value = left_element.checked_mul(right_element);
-                if new_value == None {
+                if new_value.is_none() {
                     Err(String::from("Overflow"))
                 } else if (left_element == 0) || (right_element == 0) {
                     Err(String::from("Faktor 0 not allowed."))
                 } else {
                     Ok(CalculatedNumber {
                         value: new_value.unwrap(),
-                        left_element: left_element,
-                        right_element: right_element,
-                        operation: operation,
+                        left_element,
+                        right_element,
+                        operation,
                     })
                 }
             }
@@ -80,9 +80,9 @@ impl<'game> CalculatedNumber<'game> {
                 } else {
                     Ok(CalculatedNumber {
                         value: left_element / right_element,
-                        left_element: left_element,
-                        right_element: right_element,
-                        operation: operation,
+                        left_element,
+                        right_element,
+                        operation,
                     })
                 }
             }
