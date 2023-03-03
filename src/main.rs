@@ -48,15 +48,13 @@ fn main() {
             );
         }
         false => {
-            let config_input: String;
-            if opts.config != "game.yml" {
-                // if user supplied config use it
+            let config_input : String = match opts.config.as_ref() {
+               "game.yaml" => String::from("game.yml"),
+               _ => {
                 println!("Using config file : {}", opts.config);
-                config_input = opts.config;
-            } else {
-                // use default if no config file is supplied
-                config_input = String::from("game.yml");
-            }
+                opts.config
+               },
+            };
             let config = config_reader::read_config(Path::new(&config_input)).unwrap();
             println!("Config: {:?}", config);
 
