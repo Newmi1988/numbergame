@@ -56,18 +56,17 @@ impl<'game> CalculatedNumber<'game> {
             }
             "*" => {
                 // multiplication is prone to overflow
-                let new_value = left_element.checked_mul(right_element);
-                if new_value.is_none() {
-                    Err(String::from("Overflow"))
-                } else if (left_element == 0) || (right_element == 0) {
-                    Err(String::from("Faktor 0 not allowed."))
-                } else {
+                if let Some(new_value) = left_element.checked_mul(right_element) {
                     Ok(CalculatedNumber {
-                        value: new_value.unwrap(),
+                        value: new_value,
                         left_element,
                         right_element,
                         operation,
                     })
+                } else if (left_element == 0) || (right_element == 0) {
+                    Err(String::from("Faktor 0 not allowed."))
+                } else {
+                    Err(String::from("Overflow"))
                 }
             }
             "/" => {
