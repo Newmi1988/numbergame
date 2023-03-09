@@ -193,7 +193,9 @@ impl<'game> Numbergame<'game> {
                     if tmp.value == self.target {
                         self.derived.insert(tmp.value, tmp);
                         break;
-                    } else if let std::collections::hash_map::Entry::Vacant(e) = self.derived.entry(tmp.value) {
+                    } else if let std::collections::hash_map::Entry::Vacant(e) =
+                        self.derived.entry(tmp.value)
+                    {
                         e.insert(tmp);
                     } else {
                         continue; // a solution with the same value as already in the hashmap is discarded

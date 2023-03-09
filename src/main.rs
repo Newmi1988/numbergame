@@ -48,12 +48,12 @@ fn main() {
             );
         }
         false => {
-            let config_input : String = match opts.config.as_ref() {
-               "game.yaml" => String::from("game.yml"),
-               _ => {
-                println!("Using config file : {}", opts.config);
-                opts.config
-               },
+            let config_input: String = match opts.config.as_ref() {
+                "game.yaml" => String::from("game.yml"),
+                _ => {
+                    println!("Using config file : {}", opts.config);
+                    opts.config
+                }
             };
             let config = config_reader::read_config(Path::new(&config_input)).unwrap();
             println!("Config: {:?}", config);
@@ -67,8 +67,8 @@ fn main() {
 
             // create the game object
             let mut game_two = game::Numbergame::new_numbergame(config.target, numbers);
-            println!("Big numbers: {:?}", game_two.numbers.big_number_selection);
-            println!("Small numbers: {:?}", game_two.numbers.sml_number_selection);
+            println!("Big numbers: {:?}", game_two.numbers.big_number_selection,);
+            println!("Small numbers: {:?}", game_two.numbers.sml_number_selection,);
             println!("Target : {:?}", game_two.target);
 
             let timer_game_from_config = Instant::now();
