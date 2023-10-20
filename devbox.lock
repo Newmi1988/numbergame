@@ -1,0 +1,60 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "just@latest": {
+      "last_modified": "2023-10-15T14:24:03Z",
+      "resolved": "github:NixOS/nixpkgs/12bdeb01ff9e2d3917e6a44037ed7df6e6c3df9d#just",
+      "source": "devbox-search",
+      "version": "1.15.0",
+      "systems": {
+        "aarch64-darwin": {
+          "store_path": "/nix/store/np3nbag713bsh9a56igyqa1w6inv5hyg-just-1.15.0"
+        },
+        "aarch64-linux": {
+          "store_path": "/nix/store/6y9vib4ff28aafcp1dp53cwsa8g9q2f6-just-1.15.0"
+        },
+        "x86_64-darwin": {
+          "store_path": "/nix/store/ai3ciqk6iq9b8gyfrs4s1md088qi687l-just-1.15.0"
+        },
+        "x86_64-linux": {
+          "store_path": "/nix/store/v70imvy9xij8bsw5sj2902l54li5rd4b-just-1.15.0"
+        }
+      }
+    },
+    "libiconv@latest": {
+      "last_modified": "2023-09-27T18:02:17Z",
+      "resolved": "github:NixOS/nixpkgs/517501bcf14ae6ec47efd6a17dda0ca8e6d866f9#libiconv",
+      "source": "devbox-search",
+      "version": "2.37",
+      "systems": {
+        "aarch64-linux": {
+          "store_path": "/nix/store/la9j4bk5ij2r3ligch6ps7m9aq0d3h76-glibc-iconv-2.37"
+        },
+        "x86_64-linux": {
+          "store_path": "/nix/store/km60vvxwdbfnfx522xcmisg4knz43hyr-glibc-iconv-2.37"
+        }
+      }
+    },
+    "rustup@latest": {
+      "last_modified": "2023-09-27T18:02:17Z",
+      "plugin_version": "0.0.1",
+      "resolved": "github:NixOS/nixpkgs/517501bcf14ae6ec47efd6a17dda0ca8e6d866f9#rustup",
+      "source": "devbox-search",
+      "version": "1.26.0",
+      "systems": {
+        "aarch64-darwin": {
+          "store_path": "/nix/store/wwvj17ybcisy8kd8n1jh403v63c0i3ki-rustup-1.26.0"
+        },
+        "aarch64-linux": {
+          "store_path": "/nix/store/c7fvdp7hi4kwahmp0211z79skf2vgwwc-rustup-1.26.0"
+        },
+        "x86_64-darwin": {
+          "store_path": "/nix/store/5wiawj50fdl4vnvx8dz93lbhl85cj8qs-rustup-1.26.0"
+        },
+        "x86_64-linux": {
+          "store_path": "/nix/store/9dkpq8bpq27fhsd1d4h4hwpxhyn2zma1-rustup-1.26.0"
+        }
+      }
+    }
+  }
+}
