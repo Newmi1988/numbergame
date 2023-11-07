@@ -37,7 +37,7 @@ pub fn get_default_numbers(select_n_small: u32, select_n_big: u32) -> Numbers {
         sml_random_number_vec.push(number)
     }
 
-    let big_numbers = vec![100, 75, 50, 25];
+    let big_numbers = [100, 75, 50, 25];
     let mut rng = &mut rand::thread_rng();
     let v: Vec<u32> = big_numbers
         .choose_multiple(&mut rng, select_n_big.try_into().unwrap())
@@ -90,11 +90,11 @@ impl<'game> Numbergame<'game> {
             target,
             selection_big_numbers,
             selection_sml_numbers,
-            /// get the sampled numbers as a Numbers struct
+            // get the sampled numbers as a Numbers struct
             numbers: get_default_numbers(selection_sml_numbers, selection_big_numbers),
-            /// hashmap for looking up calculated numbers
+            // hashmap for looking up calculated numbers
             derived: HashMap::new(),
-            /// allowed operations
+            // allowed operations
             operators: vec![
                 "+".to_string(),
                 "-".to_string(),
