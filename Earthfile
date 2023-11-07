@@ -1,5 +1,5 @@
 VERSION 0.7
-FROM rust:1.68
+FROM rust:latest
 WORKDIR /rustexample
 
 install-chef:
@@ -34,7 +34,7 @@ test:
     RUN cargo test
 
 image:
-    FROM debian:buster-slim
+    FROM rust:slim
     COPY +build/numbergame /usr/local/bin/numbergame
     COPY ./game.yml .
     ARG USERNAME=nonroot
