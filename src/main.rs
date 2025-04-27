@@ -56,7 +56,7 @@ fn main() {
                 }
             };
             let config = config_reader::read_config(Path::new(&config_input)).unwrap();
-            println!("Config: {:?}", config);
+            println!("Config: {config:?}");
 
             // a game with given numbers
             println!("Starting game with user defined numbers");

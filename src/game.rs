@@ -75,8 +75,7 @@ impl<'game> Numbergame<'game> {
     ) -> Numbergame<'game> {
         if selection_big_numbers > 4 {
             println!(
-                "Can't chose {} big numbers, max is 4 (now used).",
-                selection_big_numbers
+                "Can't chose {selection_big_numbers} big numbers, max is 4 (now used)."
             );
             selection_big_numbers = 4
         }
@@ -126,7 +125,6 @@ impl<'game> Numbergame<'game> {
     }
 
     /// Solve the game
-
     pub fn solve(&'game mut self) -> String {
         // combine slices of the vectors to a new vector
         let numbers: Vec<u32> = [
@@ -261,7 +259,7 @@ impl<'game> Numbergame<'game> {
             // if it was calculated do a recursion to search the original numbers
             let returned_equation =
                 Numbergame::get_equation(orig_selection, derived_values, &res.right_element);
-            write!(eq, "{})", returned_equation).unwrap();
+            write!(eq, "{returned_equation})").unwrap();
         }
         eq
     }
